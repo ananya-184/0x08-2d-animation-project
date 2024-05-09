@@ -63,7 +63,7 @@
   };
 
   function update() {
-      requestAnimationFrame(update);
+    requestAnimationFrame(update);
       if (gameOver) {
           return;
       }
@@ -72,7 +72,15 @@
       //bird
       velocityY += gravity;
       bird.y = Math.max(bird.y + velocityY, 0);
-      context.drawImage(birdImg, bird.x, bird.y, bird.width, bird.height);
+      //context.drawImage(birdImg, bird.x, bird.y, bird.width, bird.height);
+
+      context.save(); // Save the current transformation state
+      context.translate(bird.x + bird.width / 2, bird.y + bird.height / 2); // Translate to the center of the bird
+      let rotationAngle = Math.PI / 6 * velocityY / 6; // Calculate rotation angle based on bird's vertical velocity
+      context.rotate(rotationAngle); // Rotate the canvas
+      context.drawImage(birdImg, -bird.width / 2, -bird.height / 2, bird.width, bird.height); // Draw the bird at the translated and rotated position
+      context.restore(); // Restore the transformation state to its previous state
+  
 
       if (bird.y > board.height) {
           gameOver = true;
@@ -136,6 +144,16 @@
           passed: false
       };
       pipeArray.push(bottomPipe);
+
+      difficultyLevel=1
+
+      if (score > 10 * difficultyLevel) {
+        difficultyLevel++;
+      
+        // Increase difficulty based on the level
+        velocityX -= 0.5; // Increase the horizontal speed of the pipes
+      }
+      
   }
 
   function moveBird(e) {
